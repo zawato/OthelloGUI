@@ -33,22 +33,22 @@ class OthelloGame:
         # グリッドの設定
         for i in range(self.board_size):
             for j in range(self.board_size):
-                x0 = self.margin + i * self.cell_size
-                y0 = self.margin + j * self.cell_size
+                x0 = i * self.cell_size
+                y0 = j * self.cell_size
                 x1 = x0 + self.cell_size
                 y1 = y0 + self.cell_size
                 self.canvas.create_rectangle(x0, y0, x1, y1, outline="black", fill="green")
              
         # 横軸に数字（1-8）を表示
         for i in range(self.board_size):
-            x = self.margin // 4 + (i + 1) * self.cell_size
+            x = (i + 1) * self.cell_size + self.cell_size // 2
             y = self.margin // 2
             self.canvas.create_text(x, y, text=str(i + 1), font=("Helvetica", 14))
 
         # 縦軸にアルファベット（A-H）を表示
         for j in range(self.board_size):
             x = self.margin // 2  # 左側マージンに配置
-            y = self.margin // 4 + (j + 1) * self.cell_size
+            y = (j + 1) * self.cell_size + self.cell_size // 2
             self.canvas.create_text(x, y, text=chr(65 + j), font=("Helvetica", 14))    
             
         # クリックイベント（左ボタンクリック時に、handle_clickメソッドを呼び出す）
@@ -63,10 +63,10 @@ class OthelloGame:
         self.place_piece(center  , center-1, "black")
 
     def place_piece(self, row, col, color):
-        x0 = self.margin + col * self.cell_size + self.cell_size // 4
-        y0 = self.margin + row * self.cell_size + self.cell_size // 4
-        x1 = self.margin + (col + 1) * self.cell_size - self.cell_size // 4
-        y1 = self.margin + (row + 1) * self.cell_size - self.cell_size // 4
+        x0 = col     * self.cell_size + self.cell_size // 4
+        y0 = row     * self.cell_size + self.cell_size // 4
+        x1 = (col+1) * self.cell_size - self.cell_size // 4
+        y1 = (row+1) * self.cell_size - self.cell_size // 4
         # マスの状態を更新
         self.board[row][col] = color
         # 駒を描画
@@ -74,8 +74,8 @@ class OthelloGame:
 
     def handle_click(self, event):
         # クリック位置からマスを判定
-        col = (event.x - self.margin) // self.cell_size
-        row = (event.y - self.margin) // self.cell_size
+        col = event.x // self.cell_size
+        row = event.y // self.cell_size
         
         # クリック位置が正しくない場合は、無効
         if not (0 <= row < self.board_size and 0 <= col < self.board_size):
@@ -163,10 +163,10 @@ class OthelloGame:
             for col in range(self.board_size):
                 if self.is_valid_move(row, col, self.turn):
                     has_moves = True
-                    x0 = self.margin + col * self.cell_size + self.cell_size // 2 - 5
-                    y0 = self.margin + row * self.cell_size + self.cell_size // 2 - 5
-                    x1 = self.margin + col * self.cell_size + self.cell_size // 2 + 5
-                    y1 = self.margin + row * self.cell_size + self.cell_size // 2 + 5
+                    x0 = col * self.cell_size + self.cell_size // 2 - 5
+                    y0 = row * self.cell_size + self.cell_size // 2 - 5
+                    x1 = col * self.cell_size + self.cell_size // 2 + 5
+                    y1 = row * self.cell_size + self.cell_size // 2 + 5
                     self.canvas.create_oval(x0, y0, x1, y1, fill="gray", tags="highlight")
         if not has_moves:
             print(f"{self.turn.capitalize()} has no valid moves")
@@ -198,8 +198,8 @@ class OthelloGame:
             winner = "引き分け！"
 
         self.canvas.create_text(
-            self.board_size * self.cell_size // 2 + self.margin,
-            self.board_size * self.cell_size // 2 + self.margin,
+            self.board_size * self.cell_size // 2,
+            self.board_size * self.cell_size // 2,
             text=f"{winner}",
             font=("Helvetica", 36),
             fill="red"
