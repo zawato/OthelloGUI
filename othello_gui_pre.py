@@ -45,13 +45,13 @@ class OthelloGame:
         for i in range(self.board_size):
             x = self.margin // 4 + (i + 1) * self.cell_size
             y = self.margin // 2
-            self.canvas.create_text(x, y, text=str(i + 1), font=("Helvetica", 14))
+            self.canvas.create_text(x, y, text=str(i), font=("Helvetica", 14))
 
         # 縦軸にアルファベット（A-H）を表示
         for j in range(self.board_size):
             x = self.margin // 2  # 左側マージンに配置
             y = self.margin // 4 + (j + 1) * self.cell_size
-            self.canvas.create_text(x, y, text=chr(65 + j), font=("Helvetica", 14))    
+            self.canvas.create_text(x, y, text=str(j), font=("Helvetica", 14))    
             
         # クリックイベント（左ボタンクリック時に、handle_clickメソッドを呼び出す）
         self.canvas.bind("<Button-1>", self.handle_click)
@@ -72,7 +72,7 @@ class OthelloGame:
         if move:
             # move = (row, col, color) の形で保存されている
             row, col, color = move
-            move_text = f"{color.capitalize()} : {chr(65+row)}{col+1}"
+            move_text = f"Turn {len(self.history)-1} : {color.capitalize() }  ({row}, {col})"
             self.history_listbox.insert(tk.END, move_text)  # リストに追加
             self.history_listbox.yview(tk.END)  # 最新の手を表示
     
